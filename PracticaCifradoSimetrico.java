@@ -16,7 +16,8 @@ public class PracticaCifradoSimetrico {
 
     JTextArea Encriptado = new JTextArea();
     JTextArea desEncriptado = new JTextArea();
-
+    JTextArea operaciones = new JTextArea();
+    
     JButton encriptarB = new JButton(" Iniciar Cifrado ");
     JButton desencriptarB = new JButton(" Iniciar Descifrado ");
     JButton BorrarB = new JButton(" Borrar resultados ");
@@ -24,7 +25,7 @@ public class PracticaCifradoSimetrico {
     JTextField claveLlave1 = new JTextField(20);
     JTextField aEncriptar = new JTextField(20);
     JTextField aDesencriptar = new JTextField(20);
-
+    
     JLabel j1 = new JLabel(" Texto a cifrar ");
     JLabel j2 = new JLabel(" Clave / LLave ");
     JLabel j3 = new JLabel(" Texto a descifrar ");
@@ -36,29 +37,34 @@ public class PracticaCifradoSimetrico {
     JScrollPane scrollPanel2 = new JScrollPane(desEncriptado, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scrollPanel2.setPreferredSize(new Dimension(300, 200));
 
-    JScrollPane scrollPanel3 = new JScrollPane(aDesencriptar, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scrollPanel2.setPreferredSize(new Dimension(300, 200));
+    JScrollPane scrollPanel3 = new JScrollPane(operaciones, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPanel3.setPreferredSize(new Dimension(300, 200));
 
     JPanel panel1 = new JPanel();
     JPanel panel2 = new JPanel();
     JPanel panel3 = new JPanel();
     JPanel panel4 = new JPanel();
+    JPanel panel5 = new JPanel();
 
     panel1.setBorder(BorderFactory.createTitledBorder(""));
     panel2.setBorder(BorderFactory.createTitledBorder("Texto Cifrado"));
     panel3.setBorder(BorderFactory.createTitledBorder(""));
     panel4.setBorder(BorderFactory.createTitledBorder("Texto Descrifrado"));
+    panel5.setBorder(BorderFactory.createTitledBorder("Operaciones"));
+    
 
 
 		BoxLayout layout1 = new BoxLayout(panel1, BoxLayout.Y_AXIS);
 		BoxLayout layout2 = new BoxLayout(panel2, BoxLayout.Y_AXIS);
                 BoxLayout layout3 = new BoxLayout(panel3, BoxLayout.Y_AXIS);
                 BoxLayout layout4 = new BoxLayout(panel4, BoxLayout.Y_AXIS);
+                BoxLayout layout5 = new BoxLayout(panel5, BoxLayout.X_AXIS);
 
                 panel1.setLayout(layout1);
 		panel2.setLayout(layout2);
                 panel3.setLayout(layout3);
                 panel4.setLayout(layout4);
+                panel5.setLayout(layout5);
 
 		panel1.add(j1);
                 panel1.add(aEncriptar );
@@ -69,21 +75,25 @@ public class PracticaCifradoSimetrico {
                 panel2.add(scrollPanel1);
 
                 panel3.add(j3);
-                panel3.add(scrollPanel3);
+                panel3.add(aDesencriptar);
                 panel3.add(desencriptarB);
 
                 panel4.add(scrollPanel2);
+                
+                panel5.add(scrollPanel3);         
+                
 
 		frame.setLayout(new FlowLayout());
 		frame.add(panel1);
                 frame.add(panel2);
                 frame.add(panel3);
                 frame.add(panel4);
+                frame.add(panel5);
                 frame.add( BorrarB);
 
 		frame.pack();
 		frame.setVisible(true);
-                frame.setSize(1400, 300);
+                frame.setSize(1400,500);
                 //frame.setBackground(Color.blue);
                 frame.setLocationRelativeTo(null);
 
@@ -118,9 +128,9 @@ public class PracticaCifradoSimetrico {
                             char miVar = miSust.charAt(i);
                             sustFinal+= ((char)(miVar-6));
                         }
-                        System.out.println("\nSustituido :");
-                        System.out.println(sustFinal);
-
+                        operaciones.append("\nIngreso Sustituido :");
+                        operaciones.append("\n"+sustFinal);
+                        operaciones.append("\n ");
                         tran = sustFinal;
 
                         if((elMod = tran.length()%n) != 0) {
@@ -129,31 +139,35 @@ public class PracticaCifradoSimetrico {
                                 tran += " "; //el bueno
                             }
                         }
-                        System.out.println("\n Matriz:");
+                        operaciones.append("\n Matriz:");
+                        operaciones.append("\n ");
                         for(int i=0 ; i<n ; i++) {
                             for(int j=0 ; j<tran.length()/n ; j++) {
                                 String miVar = Character.toString((tran.charAt(i+(j*n))));
-                                System.out.print(miVar);
+                                operaciones.append(miVar);
+                                
                                 transtFinal+=(miVar);
                             }
-                            System.out.println();
                         }
-                        System.out.println("\nFinal cifrado:");
-                        System.out.println(transtFinal);
+                        operaciones.append("\n ");              
+                        operaciones.append("\nFinal cifrado: :");
+                        operaciones.append("\n"+transtFinal);
+                        operaciones.append("\n ");
 
-                        System.out.println("\nCesar cifrado");
+                        operaciones.append("\nCesar cifrado");
                         oux = cifrar(transtFinal, miLlave);
-                        System.out.println(oux);
+                        operaciones.append("\n"+oux);
+                        operaciones.append("\n ");
 
                         //XOR cifrado
-                        System.out.println("\nXOR cifrado");
+                        operaciones.append("\nXOR cifrado");
+                        operaciones.append("\n ");
                         miCifrado = encrXOR(oux,miLlave);
                         for(int i = 0; i < miCifrado.length; i++){
-                            System.out.printf("%d,", miCifrado[i]);
+                            operaciones.append(Integer.toString(miCifrado[i])+",");
                             finalCif+=(miCifrado[i]+",");
                         }
-                        System.out.println("");
-
+                        
                         Encriptado.setText(finalCif);
                         aDesencriptar.setText(finalCif);
 
@@ -167,13 +181,15 @@ public class PracticaCifradoSimetrico {
                                 String conTrans ="";
                                 String normal="";
                                 //XOR descifrado
-                                System.out.println("\nXOR descifrado");
+                                operaciones.append("\n ");
+                                operaciones.append("\nXOR descifrado");
                                 String xorDescifrado = desencrXOR(miCifrado,miLlave);
-                                System.out.println(xorDescifrado);
+                                operaciones.append("\n"+xorDescifrado);
                                 //Cesar descifrado
-                                System.out.println("\nCesar descifrado");
+                                operaciones.append("\n ");
+                                operaciones.append("\nCesar descifrado");
                                 String cesarDescifrado = descifrar(xorDescifrado, miLlave);
-                                System.out.println(cesarDescifrado);
+                                operaciones.append("\n"+cesarDescifrado);
 
                                 n = cesarDescifrado.length()/n;
 
@@ -188,9 +204,9 @@ public class PracticaCifradoSimetrico {
                                     char miVar = conTrans.charAt(i);
                                     normal+=((char) (miVar+6));
                                 }
-
-                                System.out.println("\nTexto = resultado descifrado: ");
-                                System.out.println(normal);
+                                operaciones.append("\n ");
+                                operaciones.append("\nTexto = resultado descifrado: ");
+                                operaciones.append("\n"+normal);
 
                                 desEncriptado.setText(normal);
 
